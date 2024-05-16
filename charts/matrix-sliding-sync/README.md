@@ -4,6 +4,12 @@
 
 A Helm chart for Kubernetes
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| jessebot |  | <https://github.com/jessebot> |
+
 ## Requirements
 
 | Repository | Name | Version |
@@ -84,13 +90,14 @@ A Helm chart for Kubernetes
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
 | syncv3.bindaddr | string | `"0.0.0.0:8008"` | SYNCV3_BINDADDR - The interface and port to listen on. (Supports unix socket: /path/to/socket) |
-| syncv3.db | string | `""` | SYNCV3_DB - Required. The postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING |
-| syncv3.existingSecret | string | `""` | existing kubernetes secret for syncv3 env vars listed above, ignores all above if set. |
+| syncv3.db | object | `{"dbname":"matrix-sliding-sync","existingSecret":"","host":"","password":"","sslmode":"disable","user":"matrix-sliding-sync"}` | templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING like this: user=$(whoami) dbname=syncv3 sslmode=disable host=host.docker.internal password='DATABASE_PASSWORD_HERE' |
+| syncv3.existingSecret | string | `""` | existing kubernetes secret for ALL syncv3 env vars listed below. if set, ignores all values below, everything under syncv3 including syncv3.db and syncvc.otlp. |
 | syncv3.logLevel | string | `"info"` | SYNCV3_LOG_LEVEL - The level of verbosity for messages logged. Available values are trace, debug, info, warn, error and fatal |
 | syncv3.maxDbConn | string | `""` | SYNCV3_MAX_DB_CONN - Default: unset. Max database connections to use when communicating with postgres. Unset or 0 means no limit. |
-| syncv3.otlpPassword | string | `""` | SYNCV3_OTLP_PASSWORD - Default: unset. The OTLP password for Basic auth. If unset, does not send an Authorization header. |
-| syncv3.otlpUrl | string | `""` | SYNCV3_OTLP_URL - Default: unset. The OTLP HTTP URL to send spans to e.g https://localhost:4318 - if unset does not send OTLP traces. |
-| syncv3.otlpUsername | string | `""` | SYNCV3_OTLP_USERNAME - Default: unset. The OTLP username for Basic auth. If unset, does not send an Authorization header. |
+| syncv3.otlp.existingSecret | string | `nil` |  |
+| syncv3.otlp.password | string | `""` | SYNCV3_OTLP_PASSWORD - Default: unset. The OTLP password for Basic auth. If unset, does not send an Authorization header. |
+| syncv3.otlp.url | string | `""` | SYNCV3_OTLP_URL - Default: unset. The OTLP HTTP URL to send spans to e.g https://localhost:4318 - if unset does not send OTLP traces. |
+| syncv3.otlp.username | string | `""` | SYNCV3_OTLP_USERNAME - Default: unset. The OTLP username for Basic auth. If unset, does not send an Authorization header. |
 | syncv3.pprof | string | `""` | SYNCV3_PPROF - Default: unset. The bind addr for pprof debugging e.g ':6060'. If not set, does not listen. |
 | syncv3.prom | string | `""` | SYNCV3_PROM - Default: unset. The bind addr for Prometheus metrics, which will be accessible at /metrics at this address. |
 | syncv3.secret | string | `""` | SYNCV3_SECRET - Required. A secret to use to encrypt access tokens. Must remain the same for the lifetime of the database. |

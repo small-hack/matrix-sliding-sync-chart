@@ -210,10 +210,20 @@ externalDatabase:
     adminPasswordKey: postgresPassword
 
 syncv3:
+  # -- existing kubernetes secret for ALL syncv3 env vars listed below. if set, ignores all values below, everything under syncv3 including syncv3.db and syncvc.otlp.
+  existingSecret: ""
   # -- SYNCV3_SERVER - Required. The destination homeserver to talk to (CS API HTTPS URL) e.g 'https://matrix-client.matrix.org' (Supports unix socket: /path/to/socket)
   server: ""
-  # -- SYNCV3_DB - Required. The postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
-  db: ""
+
+  # -- templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING like this: user=$(whoami) dbname=syncv3 sslmode=disable host=host.docker.internal password='DATABASE_PASSWORD_HERE'
+  db:
+    host: ""
+    dbname: matrix-sliding-sync
+    sslmode: disable
+    user: matrix-sliding-sync
+    password: ""
+    existingSecret: ""
+
   # -- SYNCV3_SECRET - Required. A secret to use to encrypt access tokens. Must remain the same for the lifetime of the database.
   secret: ""
   # -- SYNCV3_BINDADDR - The interface and port to listen on. (Supports unix socket: /path/to/socket)
@@ -226,17 +236,19 @@ syncv3:
   pprof: ""
   # -- SYNCV3_PROM - Default: unset. The bind addr for Prometheus metrics, which will be accessible at /metrics at this address.
   prom: ""
-  # -- SYNCV3_OTLP_URL - Default: unset. The OTLP HTTP URL to send spans to e.g https://localhost:4318 - if unset does not send OTLP traces.
-  otlpUrl: ""
-  # -- SYNCV3_OTLP_USERNAME - Default: unset. The OTLP username for Basic auth. If unset, does not send an Authorization header.
-  otlpUsername: ""
-  # -- SYNCV3_OTLP_PASSWORD - Default: unset. The OTLP password for Basic auth. If unset, does not send an Authorization header.
-  otlpPassword: ""
+
+  otlp:
+    # -- SYNCV3_OTLP_URL - Default: unset. The OTLP HTTP URL to send spans to e.g https://localhost:4318 - if unset does not send OTLP traces.
+    url: ""
+    # -- SYNCV3_OTLP_USERNAME - Default: unset. The OTLP username for Basic auth. If unset, does not send an Authorization header.
+    username: ""
+    # -- SYNCV3_OTLP_PASSWORD - Default: unset. The OTLP password for Basic auth. If unset, does not send an Authorization header.
+    password: ""
+    existingSecret:
+
   # -- SYNCV3_SENTRY_DSN - Default: unset. The Sentry DSN to report events to e.g https://sliding-sync@sentry.example.com/123 - if unset does not send sentry events.
   sentryDsn: ""
   # -- SYNCV3_LOG_LEVEL - The level of verbosity for messages logged. Available values are trace, debug, info, warn, error and fatal
   logLevel: "info"
   # -- SYNCV3_MAX_DB_CONN - Default: unset. Max database connections to use when communicating with postgres. Unset or 0 means no limit.
   maxDbConn: ""
-  # -- existing kubernetes secret for syncv3 env vars listed above, ignores all above if set.
-  existingSecret: ""

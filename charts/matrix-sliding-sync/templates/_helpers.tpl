@@ -60,3 +60,16 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING like this: user=$(whoami) dbname=syncv3 sslmode=disable host=host.docker.internal password='DATABASE_PASSWORD_HERE'
+*/}}
+{{- if not .Values.syncv3.existingSecret  }}
+{{- define "matrix-sliding-sync.dbConnString" -}}
+{{- if .Values.syncv3.db.password (eq .Values.syncv3.db.sslmode "disable") }}
+{{- printf "user=%s dbname=%s sslmode=%s host=%s password=%s" .Values.syncv3.db.user .Values.syncv3.db.dbname .Values.syncv3.db.sslmode .Values.syncv3.db.host .Values.syncv3.db.password }}
+{{- end }}
+{{- if not eq .Values.syncv3.db.sslmode "disable" }}
+{{- printf "user=%s dbname=%s sslmode=%s host=%s" .Values.syncv3.db.user .Values.syncv3.db.dbname .Values.syncv3.db.sslmode .Values.syncv3.db.host }}
+{{- end }}
+{{- end }}
