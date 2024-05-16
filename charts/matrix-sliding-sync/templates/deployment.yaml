@@ -50,7 +50,13 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          env:
+          envFrom:
+            - secretRef:
+          {{- if .Values.syncv3.existingSecret }}
+                name: {{ .Values.syncv3.existingSecret }}
+          {{- else }}
+                name: {{ include "matrix-sliding-sync.fullname" . }}-env
+          {{- end }}
 
       {{- with .Values.volumes }}
       volumes:
