@@ -73,3 +73,4 @@ templates out SYNCV3_DB which is a postgres connection string: https://www.postg
 {{- printf "user=%s dbname=%s sslmode=%s host=%s" .Values.syncv3.db.user .Values.syncv3.db.dbname .Values.syncv3.db.sslmode .Values.syncv3.db.host }}
 {{- end }}
 {{- end }}
+{{- end }}
