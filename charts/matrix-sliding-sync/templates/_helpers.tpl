@@ -62,6 +62,15 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Helper function to get postgres instance name
+*/}}
+{{- define "postgresql.name" -}}
+{{- if .Values.postgresql.enabled -}}
+{{ include "matrix-sliding-sync.fullname" . }}-postgresql
+{{- end }}
+{{- end }}
+
+{{/*
 Helper function to get the postgres secret containing the database credentials
 */}}
 {{- define "matrix-sliding-sync.postgresql.secretName" -}}
