@@ -1,6 +1,6 @@
 # matrix-sliding-sync
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.17](https://img.shields.io/badge/AppVersion-v0.99.17-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.17](https://img.shields.io/badge/AppVersion-v0.99.17-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -56,6 +56,7 @@ A Helm chart for Kubernetes
 | livenessProbe.httpGet.path | string | `"/"` |  |
 | livenessProbe.httpGet.port | string | `"http"` |  |
 | nameOverride | string | `""` |  |
+| networkPolicies.enabled | bool | `true` | whether to enable kubernetes network policies or not |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
@@ -70,10 +71,8 @@ A Helm chart for Kubernetes
 | postgresql.global.postgresql.auth.secretKeys.databaseUsername | string | `"username"` | key in existingSecret with username for matrix-sliding-sync to connect to db |
 | postgresql.global.postgresql.auth.secretKeys.userPasswordKey | string | `"password"` | key in existingSecret with password for matrix-sliding-sync to connect to db |
 | postgresql.global.postgresql.auth.username | string | `"matrix-sliding-sync"` | username of matrix-sliding-sync postgres user |
+| postgresql.persistence.enabled | bool | `false` |  |
 | postgresql.primary.initdb | object | `{"scriptsConfigMap":"{{ .Release.Name }}-postgresql-initdb"}` | run the scripts in templates/postgresql/initdb-configmap.yaml If using an external Postgres server, make sure to configure the database ref: https://github.com/matrix-org/synapse/blob/master/docs/postgres.md |
-| postgresql.primary.persistence | object | `{"enabled":false,"size":"8Gi"}` | persistent volume claim configuration for postgresql to persist data |
-| postgresql.primary.persistence.enabled | bool | `false` | Enable PostgreSQL Primary data persistence using PVC |
-| postgresql.primary.persistence.size | string | `"8Gi"` | size of postgresql volume claim |
 | postgresql.primary.podSecurityContext.enabled | bool | `true` |  |
 | postgresql.primary.podSecurityContext.fsGroup | int | `1000` |  |
 | postgresql.primary.podSecurityContext.runAsUser | int | `1000` |  |
