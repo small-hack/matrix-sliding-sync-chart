@@ -60,3 +60,38 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper function to get postgres instance name
+*/}}
+{{- define "postgresql.name" -}}
+{{- if .Values.postgresql.enabled -}}
+{{ include "matrix-sliding-sync.fullname" . }}-postgresql
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get the postgres secret containing the database credentials
+*/}}
+{{- define "matrix-sliding-sync.postgresql.secretName" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.existingSecret -}}
+{{ .Values.postgresql.global.postgresql.auth.existingSecret }}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.existingSecret -}}
+{{ .Values.externalDatabase.existingSecret }}
+{{- else -}}
+{{ template "matrix-sliding-sync.fullname" . }}-db-secret
+{{- end }}
+{{- end }}
+
+{{/*
+templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING like this: user=$(whoami) dbname=syncv3 sslmode=disable host=host.docker.internal password='DATABASE_PASSWORD_HERE'
+*/}}
+{{- define "matrix-sliding-sync.dbConnString" -}}
+{{- if and .Values.postgresql.enabled (not .Values.syncv3.existingSecret) }}
+{{- if .Values.syncv3.db.password }}
+{{- printf "user=%s dbname=%s sslmode=%s host=%s password=%s" .Values.syncv3.db.user .Values.syncv3.db.dbname .Values.syncv3.db.sslmode .Values.syncv3.db.host .Values.syncv3.db.password }}
+{{- else -}}
+{{- printf "user=%s dbname=%s sslmode=%s host=%s" .Values.syncv3.db.user .Values.syncv3.db.dbname .Values.syncv3.db.sslmode .Values.syncv3.db.host }}
+{{- end }}
+{{- end }}
+{{- end }}

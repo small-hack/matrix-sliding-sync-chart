@@ -32,8 +32,7 @@ jobs:
 
       - name: Add dependency chart repos
         run: |
-          helm repo add coturn https://small-hack.github.io/coturn-chart/
-          helm dep update charts/matrix
+          helm dep update charts/matrix-sliding-sync
 
       - name: Run chart-releaser
         id: helm-release

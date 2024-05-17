@@ -3,7 +3,7 @@ name: Lint and Test Chart
 on:
   pull_request:
     paths:
-      - 'charts/matrix/**'
+      - 'charts/matrix-sliding-sync/**'
 
 permissions:
   contents: read
@@ -24,7 +24,6 @@ jobs:
       - name: Add dependency chart repos
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add coturn https://small-hack.github.io/coturn-chart
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
@@ -49,4 +48,4 @@ jobs:
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --target-branch ${{ github.event.repository.default_branch }}
+        run: ct install --target-branch ${{ github.event.repository.default_branch }} --helm-extra-set-args '--set=postgresql.volumePermissions.enabled=false --set=postgresql.primary.networkPolicy.enabled=false'
