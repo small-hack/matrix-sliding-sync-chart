@@ -38,7 +38,7 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "matrix.postgresql.secretName" . }}
+                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
                   key: {{ .Values.postgresql.global.postgresql.auth.secretKeys.databaseUsername }}
             - name: DATABASE_HOSTNAME
               {{- if not .Values.postgresql.global.postgresql.auth.existingSecret }}
@@ -46,7 +46,7 @@ spec:
               {{ else }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "matrix.postgresql.secretName" . }}
+                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
                   key: {{ .Values.postgresql.global.postgresql.auth.secretKeys.databaseHostname }}
               {{- end }}
             {{- if .Values.postgresql.sslmode }}

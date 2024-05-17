@@ -62,6 +62,19 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Helper function to get the postgres secret containing the database credentials
+*/}}
+{{- define "matrix-sliding-sync.postgresql.secretName" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.existingSecret -}}
+{{ .Values.postgresql.global.postgresql.auth.existingSecret }}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.existingSecret -}}
+{{ .Values.externalDatabase.existingSecret }}
+{{- else -}}
+{{ template "matrix-sliding-sync.fullname" . }}-db-secret
+{{- end }}
+{{- end }}
+
+{{/*
 templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING like this: user=$(whoami) dbname=syncv3 sslmode=disable host=host.docker.internal password='DATABASE_PASSWORD_HERE'
 */}}
 {{- define "matrix-sliding-sync.dbConnString" -}}
