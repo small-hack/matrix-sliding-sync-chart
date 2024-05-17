@@ -84,7 +84,7 @@ Helper function to get the postgres secret containing the database credentials
 {{- end }}
 
 {{/*
-templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING like this: user=$(whoami) dbname=syncv3 sslmode=disable host=host.docker.internal password='DATABASE_PASSWORD_HERE'
+templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
 */}}
 {{- define "matrix-sliding-sync.dbConnString" -}}
 {{- if and .Values.postgresql.enabled (not .Values.syncv3.existingSecret) }}
