@@ -66,7 +66,55 @@ Helper function to get postgres instance name
 */}}
 {{- define "postgresql.name" -}}
 {{- if .Values.postgresql.enabled -}}
-{{ include "matrix-sliding-sync.fullname" . }}-postgresql
+{{ template "postgresql.v1.primary.fullname" .Subcharts.postgresql }}
+{{- else -}}
+{{- .Values.externalDatabase.hostname -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres database name
+*/}}
+{{- define "postgresql.databaseName" -}}
+{{- if .Values.postgresql.enabled -}}
+{{- .Values.postgresql.global.postgresql.auth.database -}}
+{{- else -}}
+{{- .Values.externalDatabase.database -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres database user
+*/}}
+{{- define "postgresql.databaseUser" -}}
+{{- if .Values.postgresql.enabled -}}
+{{- .Values.postgresql.global.postgresql.auth.username -}}
+{{- else -}}
+{{- .Values.externalDatabase.username -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres database password
+*/}}
+{{- define "postgresql.databasePassword" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.password -}}
+{{- .Values.postgresql.global.postgresql.auth.password -}}
+{{- else if .Values.externalDatabase.password -}}
+{{- .Values.externalDatabase.password -}}
+{{- else -}}
+{{- printf "" -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres database ssl mode
+*/}}
+{{- define "postgresql.databaseSslMode" -}}
+{{- if and .Values.postgresql.enabled -}}
+{{- printf "disabled" -}}
+{{- else -}}
+{{- .Values.externalDatabase.sslmode -}}
 {{- end }}
 {{- end }}
 
@@ -88,10 +136,10 @@ templates out SYNCV3_DB which is a postgres connection string: https://www.postg
 */}}
 {{- define "matrix-sliding-sync.dbConnString" -}}
 {{- if and .Values.postgresql.enabled (not .Values.syncv3.existingSecret) }}
-{{- if .Values.syncv3.db.password }}
-{{- printf "user=%s dbname=%s sslmode=%s host=%s password=%s" .Values.syncv3.db.user .Values.syncv3.db.dbname .Values.syncv3.db.sslmode .Values.syncv3.db.host .Values.syncv3.db.password }}
+{{- if (include "postgresql.databasePassword" .) }}
+{{- printf "user=%s dbname=%s sslmode=disable host=%s password=%s" (include "postgresql.databaseUser" .) (include "postgresql.databaseName" .) (include "postgresql.name" .) (include "postgresql.databasePassword" .) }}
 {{- else -}}
-{{- printf "user=%s dbname=%s sslmode=%s host=%s" .Values.syncv3.db.user .Values.syncv3.db.dbname .Values.syncv3.db.sslmode .Values.syncv3.db.host }}
+{{- printf "user=%s dbname=%s sslmode=%s host=%s" (include "postgresql.databaseUser" .) (include "postgresql.databaseName" .) (include "postgresql.databaseSslMode" .) (include "postgresql.name" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
