@@ -4,6 +4,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ include "matrix-sliding-sync.fullname" . }}-env
+{{/* SYNCV3_DB: {{ include "matrix-sliding-sync.dbConnString" . | b64enc | quote }} */}}
 data:
   {{- if .Values.syncv3.secret }}
   SYNCV3_SECRET: {{ .Values.syncv3.secret | b64enc | quote }}
@@ -11,9 +12,6 @@ data:
   SYNCV3_SECRET: {{ randAlphaNum 32 | b64enc | quote }}
   {{- end }}
   SYNCV3_SERVER: {{ .Values.syncv3.server | b64enc | quote }}
-  {{- if not .Values.syncv3.db.existingSecret }}
-  SYNCV3_DB: {{ include "matrix-sliding-sync.dbConnString" . | b64enc | quote }}
-  {{- end }}
   SYNCV3_BINDADDR: {{ .Values.syncv3.bindaddr | b64enc | quote }}
   {{ if .Values.syncv3.tlsCert }}
   SYNCV3_TLS_CERT: {{ .Values.syncv3.tlsCert | b64enc | quote }}
