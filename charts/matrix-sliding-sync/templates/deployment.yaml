@@ -35,34 +35,28 @@ spec:
         - name: postgresql-isready
           image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
           env:
-            - name: POSTGRES_USER
+            - name: PGHOST
               valueFrom:
                 secretKeyRef:
                   name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
-                  key: {{ .Values.postgresql.global.postgresql.auth.secretKeys.databaseUsername }}
-            - name: DATABASE_HOSTNAME
-              {{- if not .Values.postgresql.global.postgresql.auth.existingSecret }}
-              value: {{ template "postgresql.v1.primary.fullname" .Subcharts.postgresql }}
-              {{ else }}
+                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.hostname" . }}
+            - name: PGUSER
               valueFrom:
                 secretKeyRef:
                   name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
-                  key: {{ .Values.postgresql.global.postgresql.auth.secretKeys.databaseHostname }}
-              {{- end }}
-            {{- if .Values.postgresql.sslmode }}
-            - name: PGSSLMODE
-              value: {{ .Values.postgresql.sslmode }}
-            - name: PGSSLCERT
-              value: {{ .Values.postgresql.sslcert }}
-            - name: PGSSLKEY
-              value: {{ .Values.postgresql.sslkey }}
-            - name: PGSSLROOTCERT
-              value: {{ .Values.postgresql.sslrootcert }}
+                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.user" . }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
+                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.password" . }}
+            {{- if or .Values.postgresql.sslmode .Values.externalDatabase.sslmode }}
+            {{- include "matrix-sliding-sync.postgresql.sslEnvVars" . | nindent 12 }}
             {{- end }}
           command:
             - "sh"
             - "-c"
-            - "until pg_isready -h $DATABASE_HOSTNAME -U $POSTGRES_USER; do sleep 2; done"
+            - "until pg_isready -h $PGHOST -U $PGUSER; do sleep 2; done"
         {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -84,6 +78,30 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          env:
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
+                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.hostname" . }}
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
+                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.database" . }}
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
+                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.user" . }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
+                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.password" . }}
+            {{- if or .Values.postgresql.sslmode .Values.externalDatabase.sslmode }}
+            {{- include "matrix-sliding-sync.postgresql.sslEnvVars" . | nindent 12 }}
+            {{- end }}
           envFrom:
             - secretRef:
           {{- if .Values.syncv3.existingSecret }}

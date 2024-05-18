@@ -64,57 +64,11 @@ Create the name of the service account to use
 {{/*
 Helper function to get postgres instance name
 */}}
-{{- define "postgresql.name" -}}
+{{- define "matrix-sliding-sync.postgresql.hostname" -}}
 {{- if .Values.postgresql.enabled -}}
 {{ template "postgresql.v1.primary.fullname" .Subcharts.postgresql }}
 {{- else -}}
 {{- .Values.externalDatabase.hostname -}}
-{{- end }}
-{{- end }}
-
-{{/*
-Helper function to get postgres database name
-*/}}
-{{- define "postgresql.databaseName" -}}
-{{- if .Values.postgresql.enabled -}}
-{{- .Values.postgresql.global.postgresql.auth.database -}}
-{{- else -}}
-{{- .Values.externalDatabase.database -}}
-{{- end }}
-{{- end }}
-
-{{/*
-Helper function to get postgres database user
-*/}}
-{{- define "postgresql.databaseUser" -}}
-{{- if .Values.postgresql.enabled -}}
-{{- .Values.postgresql.global.postgresql.auth.username -}}
-{{- else -}}
-{{- .Values.externalDatabase.username -}}
-{{- end }}
-{{- end }}
-
-{{/*
-Helper function to get postgres database password
-*/}}
-{{- define "postgresql.databasePassword" -}}
-{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.password -}}
-{{- .Values.postgresql.global.postgresql.auth.password -}}
-{{- else if .Values.externalDatabase.password -}}
-{{- .Values.externalDatabase.password -}}
-{{- else -}}
-{{- printf "" -}}
-{{- end }}
-{{- end }}
-
-{{/*
-Helper function to get postgres database ssl mode
-*/}}
-{{- define "postgresql.databaseSslMode" -}}
-{{- if and .Values.postgresql.enabled -}}
-{{- printf "disabled" -}}
-{{- else -}}
-{{- .Values.externalDatabase.sslmode -}}
 {{- end }}
 {{- end }}
 
@@ -132,14 +86,91 @@ Helper function to get the postgres secret containing the database credentials
 {{- end }}
 
 {{/*
+Helper function to get postgres hostname secret key
+*/}}
+{{- define "matrix-sliding-sync.postgresql.secretKeys.hostname" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.existingSecret -}}
+{{- .Values.postgresql.global.postgresql.auth.secretKeys.databaseHostname -}}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.existingSecret -}}
+{{- .Values.externalDatabase.secretKeys.databaseHostname -}}
+{{- else -}}
+{{- printf "hostname" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres database secret key
+*/}}
+{{- define "matrix-sliding-sync.postgresql.secretKeys.database" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.existingSecret -}}
+{{- .Values.postgresql.global.postgresql.auth.secretKeys.database -}}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.existingSecret -}}
+{{- .Values.externalDatabase.secretKeys.database -}}
+{{- else -}}
+{{- printf "database" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres user secret key
+*/}}
+{{- define "matrix-sliding-sync.postgresql.secretKeys.user" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.existingSecret -}}
+{{- .Values.postgresql.global.postgresql.auth.secretKeys.databaseUsername -}}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.existingSecret -}}
+{{- .Values.externalDatabase.secretKeys.databaseUsername -}}
+{{- else -}}
+{{- printf "username" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres password secret key
+*/}}
+{{- define "matrix-sliding-sync.postgresql.secretKeys.password" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.global.postgresql.auth.existingSecret -}}
+{{- .Values.postgresql.global.postgresql.auth.secretKeys.userPasswordKey -}}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.existingSecret -}}
+{{- .Values.externalDatabase.secretKeys.userPasswordKey -}}
+{{- else -}}
+{{- printf "password" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper function to get postgres ssl mode
+*/}}
+{{- define "matrix-sliding-sync.postgresql.sslEnvVars" -}}
+{{- if and .Values.postgresql.enabled .Values.postgresql.sslmode -}}
+- name: PGSSLMODE
+  value: {{ .Values.postgresql.sslmode }}
+- name: PGSSLCERT
+  value: {{ .Values.postgresql.sslcert }}
+- name: PGSSLKEY
+  value: {{ .Values.postgresql.sslkey }}
+- name: PGSSLROOTCERT
+  value: {{ .Values.postgresql.sslrootcert }}
+{{- else if .Values.externalDatabase.enabled -}}
+- name: PGSSLMODE
+  value: {{ .Values.externalDatabase.sslmode }}
+- name: PGSSLCERT
+  value: {{ .Values.externalDatabase.sslcert }}
+- name: PGSSLKEY
+  value: {{ .Values.externalDatabase.sslkey }}
+- name: PGSSLROOTCERT
+  value: {{ .Values.externalDatabase.sslrootcert }}
+{{- end }}
+{{- end }}
+
+{{/*
 templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
 */}}
 {{- define "matrix-sliding-sync.dbConnString" -}}
-{{- if and .Values.postgresql.enabled (not .Values.syncv3.existingSecret) }}
-{{- if (include "postgresql.databasePassword" .) }}
-{{- printf "user=%s dbname=%s sslmode=disable host=%s password=%s" (include "postgresql.databaseUser" .) (include "postgresql.databaseName" .) (include "postgresql.name" .) (include "postgresql.databasePassword" .) }}
+{{- if not .Values.syncv3.existingSecret }}
+{{- if or (not .Values.externalDatabase.sslmode) (not eq .Values.externalDatabase.sslmode "disable") }}
+{{- printf "user=$PGUSER dbname=$PGDATABASE sslmode=disable host=$PGHOST password=$PGPASSWORD" }}
 {{- else -}}
-{{- printf "user=%s dbname=%s sslmode=%s host=%s" (include "postgresql.databaseUser" .) (include "postgresql.databaseName" .) (include "postgresql.databaseSslMode" .) (include "postgresql.name" .) }}
+{{- printf "user=$PGUSER dbname=$PGDATABASE sslmode=$PGSSLMODE host=$PGHOST" }}
 {{- end }}
 {{- end }}
 {{- end }}
