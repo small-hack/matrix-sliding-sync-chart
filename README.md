@@ -18,3 +18,7 @@ helm show values matrix-sliding-sync/matrix-sliding-sync > values.yaml
 # install the chart
 helm install my-release-name matrix-sliding-sync/matrix-sliding-sync --values values.yaml
 ```
+
+## Status
+
+Not yet functional. Tests still not passing. If you know why, please submit PR.
