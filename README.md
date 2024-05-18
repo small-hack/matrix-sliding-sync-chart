@@ -6,6 +6,8 @@ This is a helm chart implementing [matrix-org/sliding-sync](https://github.com/m
 
 See the [`README.md`](https://github.com/small-hack/matrix-sliding-sync-chart/blob/main/charts/matrix-sliding-sync/README.md) for docs auto-generated from the [`values.yaml`](https://github.com/small-hack/matrix-sliding-sync-chart/blob/main/charts/matrix-sliding-sync/values.yaml).
 
+## TLDR
+
 Read through the parameters and modify them locally before installing the chart:
 
 ```bash
@@ -17,6 +19,13 @@ helm show values matrix-sliding-sync/matrix-sliding-sync > values.yaml
 
 # install the chart
 helm install my-release-name matrix-sliding-sync/matrix-sliding-sync --values values.yaml
+```
+
+Here's how I've been testing in the ci:
+
+```bash
+helm install matrix matrix/matrix --set postgresql.volumePermissions.enabled=false,postgresql.primary.networkPolicy.enabled=false,element.enabled=true,fullnameOverride=matrix-stack
+helm install --set=postgresql.volumePermissions.enabled=false,postgresql.primary.networkPolicy.enabled=false,syncv3.server=http://matrix-stack-element
 ```
 
 ## Status
