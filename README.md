@@ -21,4 +21,4 @@ helm install my-release-name matrix-sliding-sync/matrix-sliding-sync --values va
 
 ## Status
 
-Not yet functional. Tests still not passing. If you know why, please submit PR.
+Kinda working. Submit PRs or Issues if something specific isn't working

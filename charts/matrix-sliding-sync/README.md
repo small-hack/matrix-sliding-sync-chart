@@ -1,8 +1,8 @@
 # matrix-sliding-sync
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.17](https://img.shields.io/badge/AppVersion-v0.99.17-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.17](https://img.shields.io/badge/AppVersion-v0.99.17-informational?style=flat-square)
 
-A Helm chart for Kubernetes
+A Helm chart for deploying matrix sliding sync on Kubernetes
 
 ## Maintainers
 
@@ -90,8 +90,10 @@ A Helm chart for Kubernetes
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.port | int | `80` |  |
-| service.type | string | `"ClusterIP"` |  |
+| service.annotations | object | `{}` | annotations for your service |
+| service.port | int | `80` | Port of service |
+| service.targetPort | int | `8008` | targetPort of service. should be the same as port for syncv3.bindaddr |
+| service.type | string | `"ClusterIP"` | type of service |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.automount | bool | `true` |  |
 | serviceAccount.create | bool | `true` |  |

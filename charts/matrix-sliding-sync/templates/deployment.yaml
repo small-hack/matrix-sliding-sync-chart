@@ -104,11 +104,7 @@ spec:
             {{- end }}
             {{- if not .Values.syncv3.existingSecret }}
             - name: SYNCV3_DB
-              {{- if or (not .Values.externalDatabase.sslmode) (not eq .Values.externalDatabase.sslmode "disable") }}
-              value: "user=$PGUSER dbname=$PGDATABASE sslmode=disable host=$PGHOST password=$PGPASSWORD"
-              {{- else -}}
-              value: "user=$PGUSER dbname=$PGDATABASE sslmode=$PGSSLMODE host=$PGHOST"
-              {{- end }}
+              value: {{ include "matrix-sliding-sync.dbConnString" . }}
             {{- end }}
           envFrom:
             - secretRef:
