@@ -102,6 +102,10 @@ spec:
             {{- if or .Values.postgresql.sslmode .Values.externalDatabase.sslmode }}
             {{- include "matrix-sliding-sync.postgresql.sslEnvVars" . | nindent 12 }}
             {{- end }}
+            {{- if not .Values.syncv3.existingSecret }}
+            - name: SYNCV3_DB
+              value: {{ include "matrix-sliding-sync.dbConnString" . }}
+            {{- end }}
           envFrom:
             - secretRef:
           {{- if .Values.syncv3.existingSecret }}

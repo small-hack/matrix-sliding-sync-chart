@@ -167,10 +167,10 @@ templates out SYNCV3_DB which is a postgres connection string: https://www.postg
 */}}
 {{- define "matrix-sliding-sync.dbConnString" -}}
 {{- if not .Values.syncv3.existingSecret }}
-{{- if or (not .Values.externalDatabase.sslmode) (not eq .Values.externalDatabase.sslmode "disable") }}
-{{- printf "\"user=$PGUSER dbname=$PGDATABASE sslmode=disable host=$PGHOST password=$PGPASSWORD\"" }}
+{{- if or .Values.postgresql.enabled (not .Values.externalDatabase.sslmode) (not eq .Values.externalDatabase.sslmode "disable") }}
+{{- printf "user=${PGUSER} dbname=${PGDATABASE} sslmode=${PGSSLMODE} host=${PGHOST} password=${PGPASSWORD}" }}
 {{- else -}}
-{{- printf "\"user=$PGUSER dbname=$PGDATABASE sslmode=$PGSSLMODE host=$PGHOST\"" }}
+{{- printf "user=${PGUSER} dbname=${PGDATABASE} sslmode=${PGSSLMODE} host=${PGHOST}" }}
 {{- end }}
 {{- end }}
 {{- end }}
