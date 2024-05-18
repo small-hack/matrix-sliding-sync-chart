@@ -4,7 +4,7 @@
 
 This is a helm chart implementing [matrix-org/sliding-sync](https://github.com/matrix-org/sliding-sync/tree/main) for deployment on Kubernetes. It was originally designed for use as a subchart for [small-hack/matrix-chart](https://github.com/small-hack/matrix-chart), but it can be used stand alone as well.
 
-See the [`README.md`](https://github.com/small-hack/matrix-sliding-sync-chart/blob/main/charts/matrix/README.md) for docs auto-generated from the [`values.yaml`](https://github.com/small-hack/matrix-sliding-sync-chart/blob/main/charts/matrix/values.yaml).
+See the [`README.md`](https://github.com/small-hack/matrix-sliding-sync-chart/blob/main/charts/matrix-sliding-sync/README.md) for docs auto-generated from the [`values.yaml`](https://github.com/small-hack/matrix-sliding-sync-chart/blob/main/charts/matrix-sliding-sync/values.yaml).
 
 Read through the parameters and modify them locally before installing the chart:
 
