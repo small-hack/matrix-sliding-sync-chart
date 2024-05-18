@@ -40,7 +40,13 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  # -- annotations for your service
+  annotations: {}
+  # -- type of service
   type: ClusterIP
+  # -- targetPort of service. should be the same as port for syncv3.bindaddr
+  targetPort: 8008
+  # -- Port of service
   port: 80
 
 ingress:
