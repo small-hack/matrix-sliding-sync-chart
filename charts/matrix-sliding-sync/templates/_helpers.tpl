@@ -164,13 +164,28 @@ Helper function to get postgres ssl mode
 
 {{/*
 templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
-*/}}
 {{- define "matrix-sliding-sync.dbConnString" -}}
 {{- if not .Values.syncv3.existingSecret }}
 {{- if or .Values.postgresql.enabled (not .Values.externalDatabase.sslmode) (not eq .Values.externalDatabase.sslmode "disable") }}
 {{- printf "user=${PGUSER} dbname=${PGDATABASE} sslmode=${PGSSLMODE} host=${PGHOST} password=${PGPASSWORD}" }}
 {{- else -}}
 {{- printf "user=${PGUSER} dbname=${PGDATABASE} sslmode=${PGSSLMODE} host=${PGHOST}" }}
+{{- end }}
+{{- end }}
+{{- end }}
+*/}}
+
+{{/*
+templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
+fmt.Sprintf("%s (%s)", version, GitCommit)
+os.Getenv(EnvDB)
+*/}}
+{{- define "matrix-sliding-sync.dbConnString" -}}
+{{- if not .Values.syncv3.existingSecret }}
+{{- if or .Values.postgresql.enabled (not .Values.externalDatabase.sslmode) (not eq .Values.externalDatabase.sslmode "disable") }}
+{{- printf 'fmt.Sprintf("user=%s dbname=%s sslmode=disable host=%s password=%s", os.Getenv("PGUSER"), os.Getenv("PGDATABASE"), os.Getenv("PGHOST"), os.Getenv("PGPASSWORD"))' }}
+{{- else -}}
+{{- printf 'fmt.Sprintf("user=%s dbname=%s sslmode=%s host=%s password=%s", os.Getenv("PGUSER"), os.Getenv("PGDATABASE"), os.Getenv("PGSSLMODE"), os.Getenv("PGHOST"), os.Getenv("PGPASSWORD"))' }}
 {{- end }}
 {{- end }}
 {{- end }}
