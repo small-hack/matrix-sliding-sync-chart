@@ -51,4 +51,4 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           helm install matrix matrix/matrix --set postgresql.volumePermissions.enabled=false,postgresql.primary.networkPolicy.enabled=false,element.enabled=true,fullnameOverride=matrix-stack
-          ct install --target-branch ${{ github.event.repository.default_branch }} --helm-extra-set-args '--set=postgresql.volumePermissions.enabled=false --set=postgresql.primary.networkPolicy.enabled=false --set=syncv3.server=http://matrix-stack-element'
+          ct install --target-branch ${{ github.event.repository.default_branch }} --helm-extra-set-args '--set=postgresql.volumePermissions.enabled=false --set=postgresql.primary.networkPolicy.enabled=false --set=syncv3.server=http://matrix-stack-synapse'

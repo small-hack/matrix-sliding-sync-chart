@@ -1,6 +1,6 @@
 # matrix-sliding-sync
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.17](https://img.shields.io/badge/AppVersion-v0.99.17-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.17](https://img.shields.io/badge/AppVersion-v0.99.17-informational?style=flat-square)
 
 A Helm chart for deploying matrix sliding sync on Kubernetes
 
@@ -42,9 +42,9 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 | externalDatabase.sslrootcert | string | `""` | optional: tls/ssl root cert for postgresql connections |
 | externalDatabase.username | string | `"syncv3"` | username of matrix-sliding-sync postgres user |
 | fullnameOverride | string | `""` |  |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.pullPolicy | string | `"IfNotPresent"` | image pull policy. if image.tag is set to "latest", set to "Always" |
 | image.repository | string | `"ghcr.io/matrix-org/sliding-sync"` |  |
-| image.tag | string | `""` |  |
+| image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
@@ -94,10 +94,10 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 | service.port | int | `80` | Port of service |
 | service.targetPort | int | `8008` | targetPort of service. should be the same as port for syncv3.bindaddr |
 | service.type | string | `"ClusterIP"` | type of service |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automount | bool | `true` |  |
-| serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | syncv3.bindaddr | string | `"0.0.0.0:8008"` | SYNCV3_BINDADDR - The interface and port to listen on. (Supports unix socket: /path/to/socket) |
 | syncv3.existingSecret | string | `""` | existing kubernetes secret for ALL syncv3 env vars listed below. if set, ignores all values below, everything under syncv3 including syncv3.db and syncvc.otlp. |
 | syncv3.logLevel | string | `"info"` | SYNCV3_LOG_LEVEL - The level of verbosity for messages logged. Available values are trace, debug, info, warn, error and fatal |
