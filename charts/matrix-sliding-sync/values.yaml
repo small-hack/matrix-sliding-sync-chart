@@ -229,7 +229,7 @@ syncv3:
   existingSecret: ""
   # -- SYNCV3_SERVER - Required. The destination homeserver to talk to (CS API HTTPS URL) e.g 'https://matrix-client.matrix.org' (Supports unix socket: /path/to/socket)
   server: ""
-  # -- SYNCV3_SECRET - Required. A secret to use to encrypt access tokens. Must remain the same for the lifetime of the database.
+  # -- SYNCV3_SECRET - Required. A secret to use to encrypt access tokens. Must remain the same for the lifetime of the database. If both syncv3.secret and syncv3.existingSecret are not set, we will autogenerate this value
   secret: ""
   # -- SYNCV3_BINDADDR - The interface and port to listen on. (Supports unix socket: /path/to/socket)
   bindaddr: "0.0.0.0:8008"
