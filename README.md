@@ -25,7 +25,7 @@ Here's how I've been testing in the ci:
 
 ```bash
 helm install matrix matrix/matrix --set postgresql.volumePermissions.enabled=false,postgresql.primary.networkPolicy.enabled=false,element.enabled=true,fullnameOverride=matrix-stack
-helm install --set=postgresql.volumePermissions.enabled=false,postgresql.primary.networkPolicy.enabled=false,syncv3.server=http://matrix-stack-element
+helm install matrix-sliding-sync --set=postgresql.volumePermissions.enabled=false,postgresql.primary.networkPolicy.enabled=false,syncv3.server=http://matrix-stack-element matrix-sliding-sync/matrix-sliding-sync
 ```
 
 ## Status
