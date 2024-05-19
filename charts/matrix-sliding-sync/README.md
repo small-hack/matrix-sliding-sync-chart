@@ -53,6 +53,7 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 | ingress.hosts[0].paths[0].path | string | `"/"` |  |
 | ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
 | ingress.tls | list | `[]` |  |
+| livenessProbe.enabled | bool | `false` | enable a liveness probe on the deployment |
 | livenessProbe.httpGet.path | string | `"/"` |  |
 | livenessProbe.httpGet.port | string | `"http"` |  |
 | nameOverride | string | `""` |  |
@@ -85,6 +86,7 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 | postgresql.tls.enabled | bool | `false` | Enable TLS traffic support for postgresql, see [bitnami/charts/postgresql#securing-traffic-using-tls](https://github.com/bitnami/charts/tree/main/bitnami/postgresql#securing-traffic-using-tls) |
 | postgresql.tls.preferServerCiphers | bool | `true` | Whether to use the server's TLS cipher preferences rather than the client's |
 | postgresql.volumePermissions.enabled | bool | `true` | Enable init container that changes the owner and group of the PVC |
+| readinessProbe.enabled | bool | `false` | enable a readiness probe on the deployment |
 | readinessProbe.httpGet.path | string | `"/"` |  |
 | readinessProbe.httpGet.port | string | `"http"` |  |
 | replicaCount | int | `1` |  |
