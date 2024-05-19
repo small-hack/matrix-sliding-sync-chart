@@ -78,10 +78,15 @@ resources: {}
   #   memory: 128Mi
 
 livenessProbe:
+  # -- enable a liveness probe on the deployment
+  enabled: false
   httpGet:
     path: /
     port: http
+
 readinessProbe:
+  # -- enable a readiness probe on the deployment
+  enabled: false
   httpGet:
     path: /
     port: http
