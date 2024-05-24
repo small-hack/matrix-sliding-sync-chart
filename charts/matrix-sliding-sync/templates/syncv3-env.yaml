@@ -1,46 +1,45 @@
-{{- if not .Values.syncv3.existingSecret }}
+{{- if not .Values.existingEnvSecret }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: {{ include "matrix-sliding-sync.fullname" . }}-env
-{{/* SYNCV3_DB: {{ include "matrix-sliding-sync.dbConnString" . | b64enc | quote }} */}}
 data:
-  {{- if .Values.syncv3.secret }}
+  {{- if and (not .Values.syncv3.existingSyncv3Secret) .Values.syncv3.secret }}
   SYNCV3_SECRET: {{ .Values.syncv3.secret | b64enc | quote }}
-  {{- else }}
+  {{- else if and (not .Values.syncv3.existingSyncv3Secret) (not .Values.syncv3.secret) }}
   SYNCV3_SECRET: {{ randAlphaNum 32 | b64enc | quote }}
   {{- end }}
   SYNCV3_SERVER: {{ .Values.syncv3.server | b64enc | quote }}
   SYNCV3_BINDADDR: {{ .Values.syncv3.bindaddr | b64enc | quote }}
-  {{ if .Values.syncv3.tlsCert }}
-  SYNCV3_TLS_CERT: {{ .Values.syncv3.tlsCert | b64enc | quote }}
+  {{ with .Values.syncv3.tlsCert }}
+  SYNCV3_TLS_CERT: {{ . | b64enc | quote }}
   {{- end }}
-  {{ if .Values.syncv3.tlsKey }}
-  SYNCV3_TLS_KEY: {{ .Values.syncv3.tlsKey | b64enc | quote }}
+  {{ with .Values.syncv3.tlsKey }}
+  SYNCV3_TLS_KEY: {{ . | b64enc | quote }}
   {{- end }}
-  {{ if not .Values.syncv3.pprof }}
-  SYNCV3_PPROF: {{ .Values.syncv3.pprof | b64enc | quote }}
+  {{ with .Values.syncv3.pprof }}
+  SYNCV3_PPROF: {{ . | b64enc | quote }}
   {{- end }}
-  {{ if not .Values.syncv3.prom }}
-  SYNCV3_PROM: {{ .Values.syncv3.prom | b64enc | quote }}
+  {{ with .Values.syncv3.prom }}
+  SYNCV3_PROM: {{ . | b64enc | quote }}
   {{- end }}
   {{ if not .Values.syncv3.otlp.existingSecret }}
-  {{ if .Values.syncv3.otlp.url }}
-  SYNCV3_OTLP_URL: {{ .Values.syncv3.otlp.url | b64enc | quote }}
+  {{ with .Values.syncv3.otlp.url }}
+  SYNCV3_OTLP_URL: {{ . | b64enc | quote }}
   {{- end }}
-  {{ if .Values.syncv3.otlp.username }}
-  SYNCV3_OTLP_USERNAME: {{ .Values.syncv3.otlp.username | b64enc | quote }}
+  {{ with .Values.syncv3.otlp.username }}
+  SYNCV3_OTLP_USERNAME: {{ . | b64enc | quote }}
   {{- end }}
-  {{ if .Values.syncv3.otlp.password }}
-  SYNCV3_OTLP_PASSWORD: {{ .Values.syncv3.otlp.password | b64enc | quote }}
+  {{ with .Values.syncv3.otlp.password }}
+  SYNCV3_OTLP_PASSWORD: {{ . | b64enc | quote }}
   {{- end }}
   {{- end }}
-  {{ if .Values.syncv3.sentryDsn }}
-  SYNCV3_SENTRY_DSN: {{ .Values.syncv3.sentryDsn | b64enc | quote }}
+  {{ with .Values.syncv3.sentryDsn }}
+  SYNCV3_SENTRY_DSN: {{ . | b64enc | quote }}
   {{- end }}
   SYNCV3_LOG_LEVEL: {{ .Values.syncv3.logLevel | b64enc | quote }}
-  {{ if .Values.syncv3.maxDbConn }}
-  SYNCV3_MAX_DB_CONN: {{ .Values.syncv3.maxDbConn | b64enc | quote }}
+  {{ with .Values.syncv3.maxDbConn }}
+  SYNCV3_MAX_DB_CONN: {{ . | b64enc | quote }}
   {{- end }}
 {{- end }}
