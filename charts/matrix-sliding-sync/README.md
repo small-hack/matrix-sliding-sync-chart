@@ -1,6 +1,6 @@
 # matrix-sliding-sync
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.18](https://img.shields.io/badge/AppVersion-v0.99.18-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.18](https://img.shields.io/badge/AppVersion-v0.99.18-informational?style=flat-square)
 
 A Helm chart for deploying matrix sliding sync on Kubernetes
 
@@ -25,7 +25,7 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 | autoscaling.maxReplicas | int | `100` |  |
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
-| existingEnvSecret | string | `""` | existing kubernetes secret for ALL syncv3 env vars listed below. if set, ignores all values under syncv3 including syncv3.db and syncvc.otlp. |
+| existingEnvSecret | string | `""` | existing kubernetes secret for ALL syncv3 env vars listed below. if set, ignores all values under syncv3 including syncv3.db and syncv3.otlp. |
 | externalDatabase.database | string | `"syncv3"` | name of the database to try and connect to |
 | externalDatabase.enabled | bool | `false` | enable using an external database *instead of* the Bitnami PostgreSQL sub-chart if externalDatabase.enabled is set to true, postgresql.enabled must be set to false |
 | externalDatabase.hostname | string | `""` | hostname of db server. Can be left blank if using postgres subchart |
