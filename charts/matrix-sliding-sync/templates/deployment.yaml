@@ -40,11 +40,13 @@ spec:
                 secretKeyRef:
                   name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
                   key: {{ include "matrix-sliding-sync.postgresql.secretKeys.hostname" . }}
+
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
                   name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
                   key: {{ include "matrix-sliding-sync.postgresql.secretKeys.user" . }}
+
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
@@ -60,8 +62,10 @@ spec:
         {{- end }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -72,51 +76,36 @@ spec:
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           {{- end }}
-          {{- with .Values.readinessProbe.enabled }}
+          {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           {{- end }}
+          {{- with .Values.resources }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-            - name: PGHOST
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
-                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.hostname" . }}
-            - name: PGDATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
-                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.database" . }}
-            - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
-                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.user" . }}
-            - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "matrix-sliding-sync.postgresql.secretName" . }}
-                  key: {{ include "matrix-sliding-sync.postgresql.secretKeys.password" . }}
-            {{- if or .Values.postgresql.sslmode .Values.externalDatabase.sslmode }}
-            {{- include "matrix-sliding-sync.postgresql.sslEnvVars" . | nindent 12 }}
-            {{- end }}
-            {{- if not .Values.syncv3.existingSecret }}
+            {{- if and (not .Values.existingEnvSecret) (not .Values.syncv3.existingDbSecret) }}
             - name: SYNCV3_DB
               value: {{ include "matrix-sliding-sync.dbConnString" . }}
+            {{- else if .Values.syncv3.existingDbSecret }}
+            - name: SYNCV3_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.syncv3.existingDbSecret }}
+                  key: {{ .Values.syncv3.dbSecretKey }}
             {{- end }}
           envFrom:
             - secretRef:
-          {{- if .Values.syncv3.existingSecret }}
+              {{- if .Values.syncv3.existingSecret }}
                 name: {{ .Values.syncv3.existingSecret }}
-          {{- else }}
+              {{- else }}
                 name: {{ include "matrix-sliding-sync.fullname" . }}-env
-          {{- end }}
+              {{- end }}
 
       {{- with .Values.volumes }}
       volumes:

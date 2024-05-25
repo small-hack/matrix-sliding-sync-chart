@@ -166,11 +166,15 @@ Helper function to get postgres ssl mode
 templates out SYNCV3_DB which is a postgres connection string: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
 */}}
 {{- define "matrix-sliding-sync.dbConnString" -}}
-{{- if not .Values.syncv3.existingSecret }}
-{{- if or .Values.postgresql.enabled }}
-{{- printf "user=%s dbname=%s sslmode=disable host=%s password=%s" .Values.postgresql.global.postgresql.auth.username .Values.postgresql.global.postgresql.auth.database (include "matrix-sliding-sync.postgresql.hostname" .) .Values.postgresql.global.postgresql.auth.password }}
-{{- else -}}
-{{- printf "user=%s dbname=%s sslmode=%s sslmode=%s host=%s" .Values.externalDatabase.username .Values.externalDatabase.database .Values.externalDatabase.sslmode .Values.externalDatabase.hostname .Values.externalDatabase.password }}
+{{- if and (not .Values.existingEnvSecret) (not .Values.syncv3.existingDbSecret) }}
+{{- if .Values.postgresql.enabled }}
+{{- printf "user=%s dbname=%s host=%s sslmode=disable password=%s" .Values.postgresql.global.postgresql.auth.username .Values.postgresql.global.postgresql.auth.database (include "matrix-sliding-sync.postgresql.hostname" .) .Values.postgresql.global.postgresql.auth.password }}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.sslmode }}
+{{- printf "user=%s dbname=%s host=%s sslmode=%s sslkey=%s sslcert=%s sslrootcert=%s" .Values.externalDatabase.username .Values.externalDatabase.database .Values.externalDatabase.hostname .Values.externalDatabase.sslmode .Values.externalDatabase.sslkey .Values.externalDatabase.sslcert .Values.externalDatabase.sslrootcert }}
+{{- else if and .Values.externalDatabase.enabled .Values.externalDatabase.password }}
+{{- printf "user=%s dbname=%s sslmode=disable host=%s password=%s" .Values.externalDatabase.username .Values.externalDatabase.database .Values.externalDatabase.hostname .Values.externalDatabase.password }}
+{{- else if .Values.syncv3.db }}
+{{- .Values.syncv3.db }}
 {{- end }}
-{{- end }}
-{{- end }}
+{{- end }}{{/* end if existing db secrets and not syncv3.db */}}
+{{- end }}{{/* end define matrix-sliding-sync.dbConnString */}}
