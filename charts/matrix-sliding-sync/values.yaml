@@ -221,7 +221,7 @@ externalDatabase:
   database: "syncv3"
 
 # -- existing kubernetes secret for ALL syncv3 env vars listed below. if set,
-# ignores all values under syncv3 including syncv3.db and syncvc.otlp.
+# ignores all values under syncv3 including syncv3.db and syncv3.otlp.
 existingEnvSecret: ""
 
 syncv3:
@@ -268,7 +268,6 @@ syncv3:
   logLevel: "info"
   # -- SYNCV3_MAX_DB_CONN - Default: unset. Max database connections to use when communicating with postgres. Unset or 0 means no limit.
   maxDbConn: ""
-
 
 networkPolicies:
   # -- whether to enable kubernetes network policies or not
