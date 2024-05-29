@@ -20,7 +20,7 @@
           "commands": [
             "bash scripts/bump-chart-version.sh '{{{updateType}}}'"
           ],
-          "fileFilters": ["charts/matrix-sliding-sync/**"]
+          "fileFilters": ["**/Chart.yaml"]
         }
       }
     ],
