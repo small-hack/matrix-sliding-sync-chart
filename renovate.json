@@ -23,6 +23,5 @@
           "fileFilters": ["**/Chart.yaml"]
         }
       }
-    ],
-    "postUpdateOptions": ["helmUpdateSubChartArchives"]
+    ]
 }
