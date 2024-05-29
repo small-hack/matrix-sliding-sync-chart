@@ -29,4 +29,4 @@ else
 fi
 
 echo "Bumping version for matrix chart from $version to $major.$minor.$patch"
-sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" "charts/matrix/Chart.yaml"
+sed -i "s/^version:.*/version: ${major}.${minor}.${patch}/g" "charts/matrix-sliding-sync/Chart.yaml"
