@@ -23,5 +23,6 @@
           "fileFilters": ["charts/matrix-sliding-sync/**"]
         }
       }
-    ]
+    ],
+    "postUpdateOptions": ["helmUpdateSubChartArchives"]
 }
