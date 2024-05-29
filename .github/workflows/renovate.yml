@@ -1,4 +1,11 @@
 name: Renovate
+permissions:
+  actions: read
+  checks: read
+  contents: write
+  deployments: read
+  pull-requests: write
+  statuses: read
 on:
   schedule:
     # string has to be quoted. This should be every hour.
