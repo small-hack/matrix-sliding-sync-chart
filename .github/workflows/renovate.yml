@@ -24,10 +24,12 @@ jobs:
     steps:
       - name: Get token
         id: get_token
-        uses: tibdex/github-app-token@v2.1.0
+        uses: actions/create-github-app-token@v1
         with:
-          private_key: ${{ secrets.PRIVATE_KEY }}
-          app_id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          owner: ${{ github.repository_owner }}
+          repositories: 'matrix-sliding-sync-chart'
 
       - name: Checkout
         uses: actions/checkout@v4.1.6
