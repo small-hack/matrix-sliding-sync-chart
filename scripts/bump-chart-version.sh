@@ -6,7 +6,7 @@ set -euo pipefail
 
 update_type="$1"
 
-version=$(grep "^version:" "charts/matrix/Chart.yaml" | awk '{print $2}')
+version=$(grep "^version:" "charts/matrix-sliding-sync/Chart.yaml" | awk '{print $2}')
 
 if [[ ! $version ]]; then
   echo "No valid version was found"
