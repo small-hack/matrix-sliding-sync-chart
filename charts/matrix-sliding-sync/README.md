@@ -1,6 +1,6 @@
 # matrix-sliding-sync
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.18](https://img.shields.io/badge/AppVersion-v0.99.18-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.18](https://img.shields.io/badge/AppVersion-v0.99.18-informational?style=flat-square)
 
 A Helm chart for deploying matrix sliding sync on Kubernetes
 
@@ -14,7 +14,7 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://registry-1.docker.io/bitnamicharts | postgresql | 15.4.0 |
+| oci://registry-1.docker.io/bitnamicharts | postgresql | 15.5.0 |
 
 ## Values
 
