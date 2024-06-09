@@ -3,8 +3,7 @@ name: Generate helm docs
 on:
   pull_request:
     paths:
-      - 'charts/matrix/Chart.yaml'
-      - 'charts/matrix/values.yaml'
+      - 'charts/**'
 
 permissions:
   contents: write
