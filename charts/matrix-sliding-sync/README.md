@@ -1,6 +1,6 @@
 # matrix-sliding-sync
 
-![Version: 0.5.3](https://img.shields.io/badge/Version-0.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.19](https://img.shields.io/badge/AppVersion-v0.99.19-informational?style=flat-square)
+![Version: 0.5.8](https://img.shields.io/badge/Version-0.5.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.99.19](https://img.shields.io/badge/AppVersion-v0.99.19-informational?style=flat-square)
 
 A Helm chart for deploying matrix sliding sync on Kubernetes
 
@@ -14,7 +14,7 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://registry-1.docker.io/bitnamicharts | postgresql | 15.5.11 |
+| oci://registry-1.docker.io/bitnamicharts | postgresql | 15.5.17 |
 
 ## Values
 
@@ -68,7 +68,9 @@ A Helm chart for deploying matrix sliding sync on Kubernetes
 | postgresql.global.postgresql.auth.secretKeys.databaseUsername | string | `"username"` | key in existingSecret with username for matrix-sliding-sync to connect to db |
 | postgresql.global.postgresql.auth.secretKeys.userPasswordKey | string | `"password"` | key in existingSecret with password for matrix-sliding-sync to connect to db |
 | postgresql.global.postgresql.auth.username | string | `"syncv3"` | username of matrix-sliding-sync postgres user |
-| postgresql.primary.initdb | object | `{"scriptsConfigMap":"{{ .Release.Name }}-postgresql-initdb"}` | run the scripts in templates/postgresql/initdb-configmap.yaml If using an external Postgres server, make sure to configure the database ref: https://github.com/matrix-org/synapse/blob/master/docs/postgres.md |
+| postgresql.primary.initdb | object | `{"scripts":{"matrix_sliding_sync.sql":"CREATE DATABASE matrix ENCODING 'UTF8' LOCALE 'C' TEMPLATE template0 OWNER syncv3;\nGRANT ALL PRIVILEGES ON DATABASE matrix-sliding-sync TO syncv3;\nGRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO syncv3;\n"}}` | If using an external Postgres server, make sure to configure the database ref: https://github.com/matrix-org/synapse/blob/master/docs/postgres.md |
+| postgresql.primary.initdb.scripts | object | `{"matrix_sliding_sync.sql":"CREATE DATABASE matrix ENCODING 'UTF8' LOCALE 'C' TEMPLATE template0 OWNER syncv3;\nGRANT ALL PRIVILEGES ON DATABASE matrix-sliding-sync TO syncv3;\nGRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO syncv3;\n"}` | Map of initdb scripts. Specify dictionary of scripts to be run at first boot |
+| postgresql.primary.initdb.scripts."matrix_sliding_sync.sql" | string | `"CREATE DATABASE matrix ENCODING 'UTF8' LOCALE 'C' TEMPLATE template0 OWNER syncv3;\nGRANT ALL PRIVILEGES ON DATABASE matrix-sliding-sync TO syncv3;\nGRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO syncv3;\n"` | note, if you change postgresql.global.postgresql.auth.username, or postgresql.global.postgresql.auth.secretKeys.userPasswordKey, please also change it in the 3 lines of this script |
 | postgresql.primary.podSecurityContext.enabled | bool | `true` |  |
 | postgresql.primary.podSecurityContext.fsGroup | int | `1000` |  |
 | postgresql.primary.podSecurityContext.runAsUser | int | `1000` |  |
