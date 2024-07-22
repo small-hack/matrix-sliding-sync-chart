@@ -184,15 +184,20 @@ postgresql:
     # -- If using an external Postgres server, make sure to configure the database
     # ref: https://github.com/matrix-org/synapse/blob/master/docs/postgres.md
     initdb:
-      # -- Map of initdb scripts. Specify dictionary of scripts to be run at first boot
-      scripts:
-        # -- note, if you change postgresql.global.postgresql.auth.username,
-        # or postgresql.global.postgresql.auth.secretKeys.userPasswordKey,
-        # please also change it in the 3 lines of this script
-        matrix_sliding_sync.sql: |
-          CREATE DATABASE matrix ENCODING 'UTF8' LOCALE 'C' TEMPLATE template0 OWNER syncv3;
-          GRANT ALL PRIVILEGES ON DATABASE matrix-sliding-sync TO syncv3;
-          GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO syncv3;
+      # -- Map of initdb scripts. Specify dictionary of scripts to be run at first boot.
+      # If you're reading this in the README of the chart repo, please check out
+      # the values.yaml for info.
+      scripts: {}
+        # -- uncomment to provide a database setup schedule. Alternatively, you
+        # can also provide postgresql.primary.initdb.scriptsConfigMap or
+        # postgresql.primary.initdb.scriptsSecret Note: if you change
+        # postgresql.global.postgresql.auth.username, or
+        # postgresql.global.postgresql.auth.secretKeys.userPasswordKey, please
+        # also change it in the 3 lines of this script, if you're using this option.
+        # matrix_sliding_sync.sql: |
+        #   CREATE DATABASE matrix ENCODING 'UTF8' LOCALE 'C' TEMPLATE template0 OWNER syncv3;
+        #   GRANT ALL PRIVILEGES ON DATABASE matrix-sliding-sync TO syncv3;
+        #   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO syncv3;
 
     podSecurityContext:
       enabled: true
