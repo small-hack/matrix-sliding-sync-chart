@@ -3,6 +3,24 @@ entries:
   matrix-sliding-sync:
   - apiVersion: v2
     appVersion: v0.99.19
+    created: "2024-10-20T11:26:44.140361538Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.0.3
+    description: A Helm chart for deploying matrix sliding sync on Kubernetes
+    digest: 11e9e50d97cefa303377f5da1230a4ff147243801a1a52b799e2ce3ff49ff9df
+    maintainers:
+    - name: jessebot
+      url: https://github.com/jessebot
+    name: matrix-sliding-sync
+    type: application
+    urls:
+    - https://github.com/small-hack/matrix-sliding-sync-chart/releases/download/matrix-sliding-sync-1.0.1/matrix-sliding-sync-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: v0.99.19
     created: "2024-10-20T10:15:41.373859652Z"
     dependencies:
     - condition: postgresql.enabled
@@ -325,4 +343,4 @@ entries:
     urls:
     - https://github.com/jessebot/matrix-sliding-sync-chart/releases/download/matrix-sliding-sync-0.1.1/matrix-sliding-sync-0.1.1.tgz
     version: 0.1.1
-generated: "2024-10-20T10:15:41.373960609Z"
+generated: "2024-10-20T11:26:44.140499107Z"
