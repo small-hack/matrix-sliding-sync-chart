@@ -1,3 +1,11 @@
+# NOTICE OF ARCHIVAL
+
+Looks like the sliding sync proxy is being deprecated according to the matrix org:
+
+> We will be decommissioning the [sliding sync proxy](https://github.com/matrix-org/matrix-spec-proposals/pull/3575) next week (21/11/2024) and Element are removing client support in mid-January (17/01/2025).
+
+You can learn more in this [matrix blog post](https://matrix.org/blog/2024/11/14/moving-to-native-sliding-sync/). Due to this development, I will be archiving this repo. If you still need it for any reason, please consider forking it. Happy matrixing 💙
+
 # Matrix Sliding Sync helm chart
 
 <a href="https://github.com/small-hack/matrix-sliding-sync-chart/releases"><img src="https://img.shields.io/github/v/release/small-hack/matrix-sliding-sync-chart?style=plastic&labelColor=blue&color=green&logo=GitHub&logoColor=white"></a>
